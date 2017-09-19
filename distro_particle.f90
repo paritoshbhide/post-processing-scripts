@@ -20,13 +20,13 @@ type(Particle_Data),dimension(500000)::Particle
 !******************************************
 !All constants here
 !******************************************
-!module constants
+module constants
 !implicit none
-real*8, parameter :: avagadro = 6.02214129d+23
+real*8, parameter :: avogadro = 6.02214129d+23
 real*8, parameter :: Pi=3.1415926535897
 real*8, parameter :: Kb=1.3806488d-23
 real*8, parameter :: hplanck=6.62606957d-34
-
+end module constants
 
 REAL:: random_numb
 
@@ -37,44 +37,42 @@ real*8 :: u_bulk,v_bulk,w_bulk, C_peculiar1, C_Peculiar2
 
 real*8,dimension(1000)::Maxwellfx,Maxwellfy,Maxwellfz,Maxwell_C
 real*8::A1,A2
+en
 
 !*******************************************************
 !Binning Width And Parameter
 type bin
-real*8::bin_width
-real*8::bin_Number
-integer,dimension(200):: bins_Cx
-integer,dimension(200):: bins_Cy
-integer,dimension(200):: bins_Cz
-real*8,dimension(200):: bins_C
+integer:: np_bin
+real*8 :: bin_v
 end type bin
 
-type(bin):: bin_velocity
-real*8::dummy
-real*8,dimension(100):: particle_distro
+type(bin), allocatable :: bin_vx, bin_vy, bin_vz
 !**********************************************************
 
 
 
 
 
-character(len=25)::Filename
+character(len=25)::Filename_in
 character(len=5)::fmt
 character(8)::numbr
 
-write(6,*) 'Number of Particles'
+write(*,*) 'Enter Number of Particles'
 read(*,*), N_particle
+
+write(*,*) 'Enter file name'
+read(*,*), Filename_in
 
 R_gas_Constant=208
 bin_velocity%bin_Number=100
 
 
 
-open(unit=2, file="Particles.dat")
- do particle_index=1,N_particle
-      read(2,*) Particle(particle_index)%Cx,Particle(particle_index)%Cy,Particle(particle_index)%Cz
- enddo
- close(2)
+open(unit=2, file=Filename_in)
+do particle_index=1,N_particle
+     read(2,*) Particle(particle_index)%Cx,Particle(particle_index)%Cy,Particle(particle_index)%Cz
+enddo
+close(2)
 
 
 !Taking the average
